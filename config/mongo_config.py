@@ -1,7 +1,10 @@
 import pymongo
+from aiogram.fsm.storage.base import BaseStorage
+from pymongo import MongoClient
 
-
+# Create an instance of the MongoDB client
 client = pymongo.MongoClient('localhost', 27017)
+
 db = client['ozp_bot']
 users = db['users']
 works = db['works']
