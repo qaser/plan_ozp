@@ -8,6 +8,7 @@ client = pymongo.MongoClient('localhost', 27017)
 db = client['ozp_bot']
 users = db['users']
 works = db['works']
+docs = db['documents']
 buffer = db['buffer']
 
 '''
@@ -18,6 +19,6 @@ buffer = db['buffer']
     'last_name': фамилия пользователя,
     'full_name': имя и фамилия пользователя
     'username':  логин пользователя
-    'department': место работы (опционально)
+    'department': место работы
     'is_admin': по умолчанию false
 '''

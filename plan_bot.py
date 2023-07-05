@@ -14,7 +14,7 @@ import utils.constants as constants
 from config.bot_config import bot, dp, storage
 from config.mongo_config import users
 from config.telegram_config import PASSWORD
-from handlers import plan, registration
+from handlers import plan, registration, stats
 
 registry = DialogRegistry(dp)
 
@@ -69,6 +69,7 @@ async def check_password(message: Message, state: FSMContext):
 async def main():
     dp.include_router(registration.router)
     dp.include_router(plan.router)
+    dp.include_router(stats.router)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
