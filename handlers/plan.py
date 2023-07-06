@@ -108,8 +108,8 @@ async def send_works(callback, queryset, dep, short_name, len_works, subdep):
         flag = const.GREEN_EMOJI if work_done == 'Выполнено' else const.RED_EMOJI
         msg = await callback.message.answer(
             text=(f'<b>Работа №{work_num}:</b>\n{work_text}\n'
-                  f'<b>Срок выполнения:</b> {work_date}\n{flag} <u>{work_done}</u>\n'
-                  f'Прикрепленные документы: {work_docs} шт.'),
+                  f'<b>Срок выполнения:</b> {work_date}\n<b>Прикрепленные документы:</b> {work_docs} шт.\n'
+                  f'{flag} <u>{work_done}</u>'),
             reply_markup=keyboard(work_id, work_docs),
             parse_mode='HTML'
         )
@@ -153,7 +153,7 @@ async def switch_mark_work(chat_id, msg_id, work_id, kb_func):
     await bot.edit_message_text(
         chat_id=chat_id,
         message_id=msg_id,
-        text=f'{msg_text}{flag} <u>{work_done}</u>\nПрикрепленные документы: {work_docs} шт.',
+        text=f'{msg_text}<b>Прикрепленные документы:</b> {work_docs} шт.\n{flag} <u>{work_done}</u>',
         reply_markup=kb_func(work_id, work_docs),
         parse_mode='HTML'
     )
