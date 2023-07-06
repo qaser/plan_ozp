@@ -5,40 +5,12 @@ from aiogram.filters.command import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
-from aiogram_dialog import (Dialog, DialogManager, DialogRegistry, StartMode,
-                            Window)
-from aiogram_dialog.widgets.kbd import Button
-from aiogram_dialog.widgets.text import Const
 
 import utils.constants as constants
-from config.bot_config import bot, dp, storage
+from config.bot_config import bot, dp
 from config.mongo_config import users
 from config.telegram_config import PASSWORD
 from handlers import plan, registration, stats
-
-registry = DialogRegistry(dp)
-
-
-# class MySG(StatesGroup):
-#     main = State()
-
-
-# main_window = Window(
-#     Const("Hello, unknown person"),
-#     Button(Const("Useless button"), id="nothing"),
-#     state=MySG.main,
-# )
-# dialog = Dialog(main_window)
-# registry.register(dialog)
-
-
-# @dp.message(Command('start'))
-# async def start(message: Message, dialog_manager: DialogManager):
-#     await dialog_manager.start(MySG.main, mode=StartMode.RESET_STACK)
-
-
-# if __name__ == '__main__':
-#     dp.run_polling(bot, skip_updates=True)
 
 
 class PasswordCheck(StatesGroup):
@@ -54,6 +26,13 @@ async def cmd_start(message: Message, state: FSMContext):
     else:
         await message.answer('Введите пароль')
         await state.set_state(PasswordCheck.password)
+
+
+@dp.message(Command('reset'))
+async def cmd_reset(message: Message, state: FSMContext):
+    await message.delete()
+    await state.clear()
+    await message.answer('Ошибки сброшены')
 
 
 @dp.message(PasswordCheck.password)

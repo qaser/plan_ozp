@@ -1,16 +1,9 @@
-import emoji
+from emoji import emojize
 from aiogram.types import (InlineKeyboardButton, InlineKeyboardMarkup,
                            ReplyKeyboardMarkup)
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
-from utils import constants
-
-
-BACK_EMOJI = emoji.emojize(':left_arrow:')
-EXIT_EMOJI = emoji.emojize(':eject_button:')
-DONE_EMOJI = emoji.emojize(':check_mark_button:')
-UNDONE_EMOJI = emoji.emojize(':cross_mark:')
-DOC_EMOJI = emoji.emojize(':clipboard:')
+import utils.constants as const
 
 
 def get_yes_no_kb() -> ReplyKeyboardMarkup:
@@ -23,30 +16,30 @@ def get_yes_no_kb() -> ReplyKeyboardMarkup:
 
 def get_work_types_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    for work_code, work_names in constants.WORK_CODES.items():
+    for work_code, work_names in const.WORK_CODES.items():
         _, short_name, emoji_code = work_names
-        work_emoji = emoji.emojize(emoji_code)
+        work_emoji = emojize(emoji_code)
         kb.button(
             text=f'{work_emoji} {short_name}',
             callback_data=f'plan_{work_code}'
         )
-    kb.button(text=f'{EXIT_EMOJI} Выход', callback_data=f'exit')
+    kb.button(text=f'{const.EXIT_EMOJI} Выход', callback_data=f'exit')
     kb.adjust(1)
     return kb.as_markup()
 
 
 def get_sub_departments_kb(dep, work_type) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    for subdep_id, subdep_name in enumerate(constants.DEPARTMENTS.get(dep)):
+    for subdep_id, subdep_name in enumerate(const.DEPARTMENTS.get(dep)):
         kb.button(
             text=subdep_name,
             callback_data=f'subdep_{work_type}_{dep}_{subdep_id}'
         )
         kb.adjust(1)
     kb.row(
-        InlineKeyboardButton(text=f'{EXIT_EMOJI} Выход', callback_data=f'exit'),
+        InlineKeyboardButton(text=f'{const.EXIT_EMOJI} Выход', callback_data=f'exit'),
         InlineKeyboardButton(
-            text=f'{BACK_EMOJI} Назад',
+            text=f'{const.BACK_EMOJI} Назад',
             callback_data=f'back_subdep_{work_type}'
         )
     )
@@ -55,66 +48,94 @@ def get_sub_departments_kb(dep, work_type) -> InlineKeyboardMarkup:
 
 def get_departments_kb(work_type) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    for dep in constants.DEPARTMENTS.keys():
+    for dep in const.DEPARTMENTS.keys():
         kb.button(
             text=dep,
             callback_data=f'dep_{work_type}_{dep}'
         )
         kb.adjust(1)
     kb.row(
-        InlineKeyboardButton(text=f'{EXIT_EMOJI} Выход', callback_data=f'exit'),
+        InlineKeyboardButton(text=f'{const.EXIT_EMOJI} Выход', callback_data=f'exit'),
         InlineKeyboardButton(
-            text=f'{BACK_EMOJI} Назад',
+            text=f'{const.BACK_EMOJI} Назад',
             callback_data=f'back_dep_{work_type}'
         )
     )
     return kb.as_markup()
 
 
-def get_done_work_kb(work_id) -> InlineKeyboardMarkup:
+def get_done_work_kb(work_id, doc_count) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
+    if doc_count > 0:
+        kb.button(
+            text=f'{const.DOC_EMOJI} Посмотреть документ(ы)',
+            callback_data=f'docs_{work_id}'
+        )
     kb.button(
-        text=f'{UNDONE_EMOJI} Отметить невыполнение',
+        text=f'{const.UNDONE_EMOJI} Отметить невыполнение',
         callback_data=f'work_undone_{work_id}'
     )
-    # kb.button(
-    #     text=f'{UNDONE_EMOJI} Посмотреть документ',
-    #     callback_data=f'work_undone_{work_id}'
-    # )
+    kb.adjust(1)
     return kb.as_markup()
 
 
-def get_undone_work_kb(work_id) -> InlineKeyboardMarkup:
+def get_undone_work_kb(work_id, doc_count) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
+    if doc_count > 0:
+        kb.button(
+            text=f'{const.DELETE_EMOJI} Удалить документ(ы)',
+            callback_data=f'confirm_delete_{work_id}'
+        ),
     kb.button(
-        text=f'{DONE_EMOJI} Отметить выполнение',
+        text=f'{const.DONE_EMOJI} Отметить выполнение',
         callback_data=f'work_done_{work_id}'
     )
+    kb.adjust(1)
     return kb.as_markup()
 
 
-def get_confirm_work_kb(work_id) -> InlineKeyboardMarkup:
+def get_confirm_work_kb(work_id, doc_count) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    # kb.button(
-    #     text=f'{DOC_EMOJI} Загрузить документ(ы)',
-    #     callback_data=f'confirm_upload_{work_id}'
-    # )
+    if doc_count > 0:
+        kb.button(
+            text=f'{const.DELETE_EMOJI} Удалить документ(ы)',
+            callback_data=f'confirm_delete_{work_id}'
+        ),
     kb.button(
-        text=f'{DONE_EMOJI} Отметить без документа',
-        callback_data=f'confirm_done_{work_id}'
+        text=f'{const.DOC_EMOJI} Загрузить документ(ы)',
+        callback_data=f'confirm_upload_{work_id}'
     )
+    if doc_count > 0:
+        kb.button(
+            text=f'{const.DONE_EMOJI} Отметить выполнение',
+            callback_data=f'confirm_done_{work_id}'
+        ),
+    else:
+        kb.button(
+            text=f'{const.DONE_EMOJI} Отметить без документа',
+            callback_data=f'confirm_done_{work_id}'
+        )
     kb.button(
-        text=f'{BACK_EMOJI} Отмена',
+        text=f'{const.BACK_EMOJI} Отмена',
         callback_data=f'confirm_cancel_{work_id}'
     )
     kb.adjust(1)
     return kb.as_markup()
 
 
+def get_upload_kb(work_id, mark) -> InlineKeyboardMarkup:
+    kb = InlineKeyboardBuilder()
+    kb.button(
+        text=f'{const.BACK_EMOJI} Отмена',
+        callback_data=f'upload_{mark}_{work_id}'
+    )
+    return kb.as_markup()
+
+
 def get_drop_messages_kb(drop_id) -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(
-        text=f'{EXIT_EMOJI} Выход',
+        text=f'{const.EXIT_EMOJI} Выход',
         callback_data=f'drop_{drop_id}'
     )
     return kb.as_markup()
@@ -123,7 +144,7 @@ def get_drop_messages_kb(drop_id) -> InlineKeyboardMarkup:
 def get_exit_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     kb.button(
-        text=f'{EXIT_EMOJI} Выход',
+        text=f'{const.EXIT_EMOJI} Выход',
         callback_data='exit'
     )
     return kb.as_markup()

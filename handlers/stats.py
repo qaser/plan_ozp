@@ -60,6 +60,6 @@ def generate_text_from_dict(res_dict):
     for name, counts in res_dict.items():
         count_all, count_done = counts
         count_percent = ceil((count_done / count_all) * 100)
-        text = f'<b>{name}</b>: {count_done} из {count_all} ({count_percent}%)\n'
+        text = f'<b>{name}</b>:\n{count_done} из {count_all} ({count_percent}%)\n'
         res_text = f'{res_text}{text}'
     return res_text

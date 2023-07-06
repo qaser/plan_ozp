@@ -1,3 +1,14 @@
+import emoji
+
+GREEN_EMOJI = emoji.emojize(':green_circle:')
+RED_EMOJI = emoji.emojize(':red_circle:')
+BACK_EMOJI = emoji.emojize(':left_arrow:')
+EXIT_EMOJI = emoji.emojize(':eject_button:')
+DONE_EMOJI = emoji.emojize(':check_mark_button:')
+UNDONE_EMOJI = emoji.emojize(':cross_mark:')
+DOC_EMOJI = emoji.emojize(':clipboard:')
+DELETE_EMOJI = emoji.emojize(':wastebasket:')
+
 TIME_ZONE = 'Asia/Yekaterinburg'
 
 HELP_TEXT = (
@@ -20,6 +31,18 @@ DEPARTMENTS = {
     'ВПО': (),
     'Служба ХМТРиСО': (),
 }
+
+REG_DEPARTMENTS = [
+    'Главный инженер',
+    'ГКС',
+    'ЛЭС',
+    'ЭВС',
+    'Служба ЗК',
+    'Служба АиМО',
+    'Служба связи',
+    'ВПО',
+    'Служба ХМТРиСО',
+]
 
 INITIAL_TEXT = 'Для начала работы пройдите регистрацию \n\n/registration'
 

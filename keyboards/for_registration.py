@@ -14,7 +14,7 @@ def get_yes_no_kb() -> ReplyKeyboardMarkup:
 
 def get_departments_kb() -> ReplyKeyboardMarkup:
     kb = ReplyKeyboardBuilder()
-    for dep in constants.DEPARTMENTS.keys():
+    for dep in constants.REG_DEPARTMENTS:
         kb.button(text=dep)
     kb.adjust(1)
     return kb.as_markup(resize_keyboard=True)

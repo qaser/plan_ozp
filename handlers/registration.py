@@ -28,9 +28,9 @@ async def user_registration(message: Message, state: FSMContext):
     await state.set_state(Registration.department)
 
 
-@router.message(Registration.department, F.text.in_(constants.DEPARTMENTS))
+@router.message(Registration.department, F.text.in_(constants.REG_DEPARTMENTS))
 async def department_confirm(message: Message, state: FSMContext):
-    if message.text not in constants.DEPARTMENTS:
+    if message.text not in constants.REG_DEPARTMENTS:
         await message.answer(
             'Пожалуйста, выберите службу, используя список ниже.'
         )
@@ -54,6 +54,7 @@ async def user_save(message: Message, state: FSMContext):
         user = message.from_user
         buffer_data = await state.get_data()
         depart = buffer_data['department']
+        is_admin = 'True' if depart == 'Главный инженер' else 'False'
         users.update_one(
             {'user_id': user.id},
             {'$set':
@@ -63,7 +64,7 @@ async def user_save(message: Message, state: FSMContext):
                     'last_name': user.last_name,
                     'full_name': user.full_name,
                     'department': depart,
-                    'is_admin': 'False'
+                    'is_admin': is_admin
                 }
             },
             upsert=True
