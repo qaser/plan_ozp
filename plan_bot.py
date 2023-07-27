@@ -55,9 +55,9 @@ async def main():
     scheduler.add_job(
         send_remainder,
         'cron',
-        day_of_week='thu',
-        hour=23,
-        minute=57,
+        day_of_week='fri',
+        hour=9,
+        minute=0,
         timezone=constants.TIME_ZONE
     )
     scheduler.start()
