@@ -5,6 +5,11 @@ from aiogram.filters.command import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
+from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.memory import MemoryStorage
+from scheduler.scheduler_funcs import send_remainder
+from scheduler.scheduler_jobs import scheduler, scheduler_jobs
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import utils.constants as constants
 from config.bot_config import bot, dp
@@ -46,12 +51,23 @@ async def check_password(message: Message, state: FSMContext):
 
 
 async def main():
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(
+        send_remainder,
+        'cron',
+        day_of_week='thu',
+        hour=23,
+        minute=57,
+        timezone=constants.TIME_ZONE
+    )
+    scheduler.start()
     dp.include_router(registration.router)
     dp.include_router(plan.router)
     dp.include_router(stats.router)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
+
     logging.basicConfig(
         filename='logs_bot.log',
         level=logging.INFO,

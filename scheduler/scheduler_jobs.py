@@ -11,8 +11,8 @@ def scheduler_jobs():
     scheduler.add_job(
         send_remainder,
         'cron',
-        day_of_week='fri',
-        hour=9,
-        minute=0,
+        day_of_week='thu',
+        hour=23,
+        minute=50,
         timezone=TIME_ZONE
     )
