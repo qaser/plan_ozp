@@ -274,7 +274,7 @@ async def menu_back(callback: CallbackQuery):
 
 
 async def send_note_admins():
-    admins = users.find({'department': 'Главный инженер'})
+    admins = list(users.find({'department': 'Главный инженер'}))
     for admin in admins:
         await bot.send_message(
             chat_id=admin.get('user_id'),
