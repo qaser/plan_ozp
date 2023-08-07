@@ -168,6 +168,7 @@ async def confirm_work(callback: CallbackQuery, state: FSMContext):
         mark = const.WORK_MARK.get(active)
         works.update_one({'_id': ObjectId(work_id)}, {'$set': {'is_done': mark}})
         await switch_mark_work(chat_id, msg_id, work_id, kb.get_done_work_kb)
+        await send_note_admins()
     elif active == 'cancel':
         await switch_mark_work(chat_id, msg_id, work_id, kb.get_undone_work_kb)
     elif active == 'upload':
@@ -215,6 +216,7 @@ async def file_save(message: Message, state: FSMContext):
     works.update_one({'_id': ObjectId(work_id)}, {'$set': {'is_done': 'Выполнено'}})
     await switch_mark_work(chat_id, msg_id, work_id, kb.get_done_work_kb)
     await message.answer('Файл получен, информация о мероприятии изменена')
+    await send_note_admins()
 
 
 @router.callback_query(Text(startswith='upload_'))
@@ -269,6 +271,15 @@ async def menu_back(callback: CallbackQuery):
         await choose_work_types(callback.message)
     elif level == 'subdep':
         await get_departments(callback, work_type)
+
+
+async def send_note_admins():
+    admins = users.find({'department': 'Главный инженер'})
+    for admin in admins:
+        await bot.send_message(
+            chat_id=admin.get('user_id'),
+            text='Получена иформация о выполненных работах'
+        )
 
 
 @router.callback_query(Text(startswith='exit'))
