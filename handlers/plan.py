@@ -278,7 +278,7 @@ async def send_note_admins():
     for admin in admins:
         await bot.send_message(
             chat_id=admin.get('user_id'),
-            text='Получена иформация о выполненных работах'
+            text='Получена информация о выполненных работах'
         )
 
 
