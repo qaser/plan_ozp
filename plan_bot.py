@@ -7,9 +7,9 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.types import Message
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from scheduler.scheduler_funcs import send_remainder
-from scheduler.scheduler_jobs import scheduler, scheduler_jobs
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+# from scheduler.scheduler_funcs import send_remainder
+# from scheduler.scheduler_jobs import scheduler, scheduler_jobs
+# from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import utils.constants as constants
 from config.bot_config import bot, dp
@@ -51,16 +51,16 @@ async def check_password(message: Message, state: FSMContext):
 
 
 async def main():
-    scheduler = AsyncIOScheduler()
-    scheduler.add_job(
-        send_remainder,
-        'cron',
-        day_of_week='mon, fri',
-        hour=9,
-        minute=0,
-        timezone=constants.TIME_ZONE
-    )
-    scheduler.start()
+    # scheduler = AsyncIOScheduler()
+    # scheduler.add_job(
+    #     send_remainder,
+    #     'cron',
+    #     day_of_week='mon, fri',
+    #     hour=9,
+    #     minute=0,
+    #     timezone=constants.TIME_ZONE
+    # )
+    # scheduler.start()
     dp.include_router(registration.router)
     dp.include_router(plan.router)
     dp.include_router(stats.router)
